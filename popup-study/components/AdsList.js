@@ -56,6 +56,6 @@ const styles = StyleSheet.create({
   },
   adCardIntersperse: {
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: '#ddd',
   },
 });

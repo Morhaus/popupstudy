@@ -19,6 +19,7 @@ export default class AdsScreen extends React.Component {
         id: '0',
         title: 'Groupmate',
         tags: ['TIE-000', 'TIE-001'],
+        requests: 2,
       },
       {
         id: '1',
