@@ -69,7 +69,7 @@ class AppContainer extends React.Component {
         </View>
       );
     } else {
-      return <Expo.Components.AppLoading />;
+      return <Expo.AppLoading />;
     }
   }
 }
