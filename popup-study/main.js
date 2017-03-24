@@ -57,8 +57,8 @@ class AppContainer extends React.Component {
           <ApolloProvider client={client}>
             <NavigationProvider router={Router}>
               <StackNavigation
-                id="root"
-                initialRoute={Router.getRoute('rootNavigation')}
+                id="signIn"
+                initialRoute={Router.getRoute('signIn')}
               />
             </NavigationProvider>
           </ApolloProvider>
