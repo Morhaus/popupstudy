@@ -1,12 +1,21 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View, Button } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  ActivityIndicator,
+} from 'react-native';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 
-import AdsList from '../components/AdsList';
+import PostsList from '../components/PostsList';
 
-export default class AdsScreen extends React.Component {
+class PostsScreen extends React.Component {
   static route = {
     navigationBar: {
-      title: 'Ads',
+      title: 'Posts',
       renderRight(...args) {
         return <Button title="New" onPress={() => {}} />;
       },
@@ -14,7 +23,11 @@ export default class AdsScreen extends React.Component {
   };
 
   render() {
-    const myAds = [
+    if (this.props.data.loading) {
+      return <ActivityIndicator />;
+    }
+
+    const myPosts = [
       {
         id: '0',
         title: 'Groupmate',
@@ -32,7 +45,7 @@ export default class AdsScreen extends React.Component {
         tags: ['TIE-000'],
       },
     ];
-    const suggestedAds = [
+    const suggestedPosts = [
       {
         id: '0',
         title: 'Tutor',
@@ -66,17 +79,17 @@ export default class AdsScreen extends React.Component {
     ];
     return (
       <View style={styles.container}>
-        <AdsList
+        <PostsList
           categories={[
             {
-              id: 'myAds',
-              title: 'My ads',
-              ads: myAds,
+              id: 'myPosts',
+              title: 'My posts',
+              posts: myPosts,
             },
             {
-              id: 'suggestedAds',
+              id: 'suggestedPosts',
               title: 'Suggested',
-              ads: suggestedAds,
+              posts: this.props.data.allPosts,
             },
           ]}
         />
@@ -85,9 +98,24 @@ export default class AdsScreen extends React.Component {
   }
 }
 
+const PostsQuery = gql`
+  query PostsQuery {
+    allPosts {
+      id,
+      title,
+      tags {
+        name,
+        isCourse
+      }
+    }
+  }
+`;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
 });
+
+export default graphql(PostsQuery)(PostsScreen);

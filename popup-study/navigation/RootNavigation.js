@@ -24,11 +24,12 @@ export default class RootNavigation extends React.Component {
 
   render() {
     return (
-      <TabNavigation tabBarHeight={56} initialTab="ads">
+      <TabNavigation tabBarHeight={56} initialTab="posts">
         <TabNavigationItem
-          id="ads"
-          renderIcon={isSelected => this._renderIcon('list', isSelected)}>
-          <StackNavigation initialRoute="ads" />
+          id="posts"
+          renderIcon={isSelected => this._renderIcon('list', isSelected)}
+        >
+          <StackNavigation initialRoute="posts" />
         </TabNavigationItem>
       </TabNavigation>
     );

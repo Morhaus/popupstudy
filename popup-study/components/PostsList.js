@@ -2,9 +2,9 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, View, Button } from 'react-native';
 import { flatten } from 'lodash';
 
-import AdCard from './AdCard';
+import PostCard from './PostCard';
 
-export default class AdsList extends React.Component {
+export default class PostsList extends React.Component {
   render() {
     const { categories } = this.props;
     return (
@@ -18,15 +18,16 @@ export default class AdsList extends React.Component {
             <View key={`${category.id}.title`} style={styles.sticky}>
               <Text style={styles.stickyText}>{category.title}</Text>
             </View>,
-            <View key={`${category.id}.ads`} style={styles.adsList}>
-              {category.ads.map((ad, idx) => (
+            <View key={`${category.id}.posts`} style={styles.postsList}>
+              {category.posts.map((post, idx) => (
                 <View
-                  key={ad.id}
+                  key={post.id}
                   style={[
-                    idx !== category.ads.length - 1 && styles.adCardIntersperse,
+                    idx !== category.posts.length - 1 &&
+                      styles.postCardIntersperse,
                   ]}
                 >
-                  <AdCard ad={ad} />
+                  <PostCard post={post} />
                 </View>
               ))}
             </View>,
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
     color: '#666',
     fontVariant: ['small-caps'],
   },
-  adCardIntersperse: {
+  postCardIntersperse: {
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
   },

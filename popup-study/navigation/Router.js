@@ -1,11 +1,13 @@
 import { createRouter } from '@expo/ex-navigation';
 
-import AdsScreen from '../screens/AdsScreen';
 import SignInScreen from '../screens/SignInScreen';
 import RootNavigation from './RootNavigation';
+import PostsScreen from '../screens/PostsScreen';
+import PostScreen from '../screens/PostScreen';
 
 export default createRouter(() => ({
-  ads: () => AdsScreen,
   signIn: () => SignInScreen,
   rootNavigation: () => RootNavigation,
+  posts: () => PostsScreen,
+  post: () => PostScreen,
 }));
