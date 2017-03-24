@@ -9,9 +9,17 @@ import {
 } from 'react-native';
 import { NavigationProvider, StackNavigation } from '@expo/ex-navigation';
 import { FontAwesome } from '@expo/vector-icons';
+import ApolloClient, { createNetworkInterface } from 'apollo-client';
+import { ApolloProvider } from 'react-apollo';
 
 import Router from './navigation/Router';
 import cacheAssetsAsync from './utilities/cacheAssetsAsync';
+
+const client = new ApolloClient({
+  networkInterface: createNetworkInterface({
+    uri: 'https://api.graph.cool/simple/v1/cj0cew9fx44ka01547ytdzfs3',
+  }),
+});
 
 class AppContainer extends React.Component {
   state = {
@@ -46,12 +54,14 @@ class AppContainer extends React.Component {
     if (this.state.appIsReady) {
       return (
         <View style={styles.container}>
-          <NavigationProvider router={Router}>
-            <StackNavigation
-              id="root"
-              initialRoute={Router.getRoute('rootNavigation')}
-            />
-          </NavigationProvider>
+          <ApolloProvider client={client}>
+            <NavigationProvider router={Router}>
+              <StackNavigation
+                id="root"
+                initialRoute={Router.getRoute('rootNavigation')}
+              />
+            </NavigationProvider>
+          </ApolloProvider>
 
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
           {Platform.OS === 'android' &&
