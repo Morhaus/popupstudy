@@ -102,6 +102,7 @@ const PostsQuery = gql`
     id
     title
     tags {
+      id
       name
       isCourse
     }

@@ -10,7 +10,7 @@ export default class TagsList extends React.Component {
       <View style={styles.container}>
         {tags.map((tag, idx) => (
           <View
-            key={tag}
+            key={tag.id}
             style={idx !== tags.length - 1 && styles.tagIntersperse}
           >
             <TagCard tag={tag} />

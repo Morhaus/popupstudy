@@ -6,7 +6,7 @@ export default class TagCard extends React.Component {
     const { tag } = this.props;
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>{tag}</Text>
+        <Text style={styles.text}>{tag.name}</Text>
       </View>
     );
   }
