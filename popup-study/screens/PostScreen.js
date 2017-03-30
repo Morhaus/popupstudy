@@ -7,9 +7,6 @@ class PostScreen extends React.Component {
       title(params) {
         return params.title;
       },
-      renderLeft(...args) {
-        return <Button title="Back" onPress={() => {}} />;
-      },
     },
   };
 
