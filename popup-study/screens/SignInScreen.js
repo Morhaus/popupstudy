@@ -10,9 +10,11 @@ import {
 } from 'react-native';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
+import { connect } from 'react-redux';
 
 import Router from '../navigation/Router';
 import Input from '../components/Input';
+import { setToken } from '../store/actions';
 
 class SignInScreen extends React.Component {
   static route = {
@@ -32,55 +34,53 @@ class SignInScreen extends React.Component {
   }
 
   onSignIn = () => {
-    this.props
-      .signInUser({
-        variables: { email: this.state.email, password: this.state.password },
-      })
-      .then(
-        ({ data }) => {
-          // @TODO: Use data.signInUser.token for subsequent requests (store in
-          // redux)
-          this.props.navigator.push(Router.getRoute('rootNavigation'));
-        },
-        error => {
-          console.log({ error });
-          error.graphQLErrors.forEach(error => {
-            switch (error.code) {
-              case 3022:
-                Alert.alert('Wrong email or password.');
-                break;
-              default:
-                Alert.alert('An unknown error has occurred.');
-                break;
-            }
-          });
-        }
-      );
+    const { setToken, signInUser } = this.props;
+    signInUser({
+      variables: { email: this.state.email, password: this.state.password },
+    }).then(
+      ({ data }) => {
+        setToken(data.signinUser.token);
+        this.props.navigator.push(Router.getRoute('rootNavigation'));
+      },
+      error => {
+        console.log({ error });
+        error.graphQLErrors.forEach(error => {
+          switch (error.code) {
+            case 3022:
+              Alert.alert('Wrong email or password.');
+              break;
+            default:
+              Alert.alert('An unknown error has occurred.');
+              break;
+          }
+        });
+      }
+    );
   };
 
   onSignUp = () => {
-    this.props
-      .createUser({
-        variables: { email: this.state.email, password: this.state.password },
-      })
-      .then(
-        () => {
-          this.onSignIn();
-        },
-        error => {
-          console.log({ error });
-          error.graphQLErrors.forEach(error => {
-            switch (error.code) {
-              case 3023:
-                Alert.alert('A user with that email already exists.');
-                break;
-              default:
-                Alert.alert('An unknown error has occurred.');
-                break;
-            }
-          });
-        }
-      );
+    const { createUser } = this.props;
+
+    createUser({
+      variables: { email: this.state.email, password: this.state.password },
+    }).then(
+      () => {
+        this.onSignIn();
+      },
+      error => {
+        console.log({ error });
+        error.graphQLErrors.forEach(error => {
+          switch (error.code) {
+            case 3023:
+              Alert.alert('A user with that email already exists.');
+              break;
+            default:
+              Alert.alert('An unknown error has occurred.');
+              break;
+          }
+        });
+      }
+    );
   };
 
   render() {
@@ -169,6 +169,8 @@ const signInUserMutation = gql`
   }
 `;
 
-export default graphql(createUserMutation, { name: 'createUser' })(
-  graphql(signInUserMutation, { name: 'signInUser' })(SignInScreen)
+export default connect(null, { setToken })(
+  graphql(createUserMutation, { name: 'createUser' })(
+    graphql(signInUserMutation, { name: 'signInUser' })(SignInScreen)
+  )
 );

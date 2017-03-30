@@ -20,9 +20,14 @@
     "react": "~15.4.0",
     "react-apollo": "^1.0.0-rc.3",
     "react-native": "https://github.com/exponent/react-native/archive/sdk-15.0.0.tar.gz",
+    "react-redux": "^5.0.3",
+    "redux": "^3.6.0",
     "uglify-js": "2.8.15"
   },
   "devDependencies": {
-    "jest-expo": "~0.2.1"
+    "jest-expo": "~0.2.1",
+    "reactotron-react-native": "^1.9.1",
+    "reactotron-redux": "^1.9.1",
+    "redux-devtools": "^3.3.2"
   }
 }

@@ -11,9 +11,12 @@ import { NavigationProvider, StackNavigation } from '@expo/ex-navigation';
 import { FontAwesome } from '@expo/vector-icons';
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
+import { Provider } from 'react-redux';
 
 import Router from './navigation/Router';
 import cacheAssetsAsync from './utilities/cacheAssetsAsync';
+import './utilities/reactotron';
+import store from './store/store';
 
 const client = new ApolloClient({
   networkInterface: createNetworkInterface({
@@ -54,7 +57,7 @@ class AppContainer extends React.Component {
     if (this.state.appIsReady) {
       return (
         <View style={styles.container}>
-          <ApolloProvider client={client}>
+          <ApolloProvider store={store} client={client}>
             <NavigationProvider router={Router}>
               <StackNavigation
                 id="signIn"
