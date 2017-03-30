@@ -8,8 +8,7 @@ import {
   Button,
   Alert,
 } from 'react-native';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
+import { gql, graphql } from 'react-apollo';
 import { connect } from 'react-redux';
 
 import Router from '../navigation/Router';
