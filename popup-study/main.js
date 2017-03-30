@@ -9,20 +9,13 @@ import {
 } from 'react-native';
 import { NavigationProvider, StackNavigation } from '@expo/ex-navigation';
 import { FontAwesome } from '@expo/vector-icons';
-import ApolloClient, { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
-import { Provider } from 'react-redux';
 
 import Router from './navigation/Router';
 import cacheAssetsAsync from './utilities/cacheAssetsAsync';
 import './utilities/reactotron';
 import store from './store/store';
-
-const client = new ApolloClient({
-  networkInterface: createNetworkInterface({
-    uri: 'https://api.graph.cool/simple/v1/cj0cew9fx44ka01547ytdzfs3',
-  }),
-});
+import client from './utilities/apollo';
 
 class AppContainer extends React.Component {
   state = {

@@ -7,8 +7,7 @@ import {
   Button,
   ActivityIndicator,
 } from 'react-native';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
+import { gql, graphql } from 'react-apollo';
 
 import PostsList from '../components/PostsList';
 
@@ -27,56 +26,56 @@ class PostsScreen extends React.Component {
       return <ActivityIndicator />;
     }
 
-    const myPosts = [
-      {
-        id: '0',
-        title: 'Groupmate',
-        tags: ['TIE-000', 'TIE-001'],
-        requests: 2,
-      },
-      {
-        id: '1',
-        title: 'Groupmate',
-        tags: ['TIE-000'],
-      },
-      {
-        id: '2',
-        title: 'Groupmate',
-        tags: ['TIE-000'],
-      },
-    ];
-    const suggestedPosts = [
-      {
-        id: '0',
-        title: 'Tutor',
-        tags: ['TIE-000'],
-      },
-      {
-        id: '1',
-        title: 'Tutor',
-        tags: ['TIE-000'],
-      },
-      {
-        id: '2',
-        title: 'Tutor',
-        tags: ['TIE-000'],
-      },
-      {
-        id: '3',
-        title: 'Tutor',
-        tags: ['TIE-000'],
-      },
-      {
-        id: '4',
-        title: 'Tutor',
-        tags: ['TIE-000'],
-      },
-      {
-        id: '5',
-        title: 'Tutor',
-        tags: ['TIE-000'],
-      },
-    ];
+    // const myPosts = [
+    //   {
+    //     id: '0',
+    //     title: 'Groupmate',
+    //     tags: ['TIE-000', 'TIE-001'],
+    //     requests: 2,
+    //   },
+    //   {
+    //     id: '1',
+    //     title: 'Groupmate',
+    //     tags: ['TIE-000'],
+    //   },
+    //   {
+    //     id: '2',
+    //     title: 'Groupmate',
+    //     tags: ['TIE-000'],
+    //   },
+    // ];
+    // const suggestedPosts = [
+    //   {
+    //     id: '0',
+    //     title: 'Tutor',
+    //     tags: ['TIE-000'],
+    //   },
+    //   {
+    //     id: '1',
+    //     title: 'Tutor',
+    //     tags: ['TIE-000'],
+    //   },
+    //   {
+    //     id: '2',
+    //     title: 'Tutor',
+    //     tags: ['TIE-000'],
+    //   },
+    //   {
+    //     id: '3',
+    //     title: 'Tutor',
+    //     tags: ['TIE-000'],
+    //   },
+    //   {
+    //     id: '4',
+    //     title: 'Tutor',
+    //     tags: ['TIE-000'],
+    //   },
+    //   {
+    //     id: '5',
+    //     title: 'Tutor',
+    //     tags: ['TIE-000'],
+    //   },
+    // ];
     return (
       <View style={styles.container}>
         <PostsList
@@ -84,7 +83,7 @@ class PostsScreen extends React.Component {
             {
               id: 'myPosts',
               title: 'My posts',
-              posts: myPosts,
+              posts: this.props.data.user.posts,
             },
             {
               id: 'suggestedPosts',
@@ -99,13 +98,22 @@ class PostsScreen extends React.Component {
 }
 
 const PostsQuery = gql`
+  fragment presentationPost on Post {
+    id
+    title
+    tags {
+      name
+      isCourse
+    }
+  }
+
   query PostsQuery {
     allPosts {
-      id,
-      title,
-      tags {
-        name,
-        isCourse
+      ...presentationPost
+    }
+    user {
+      posts {
+        ...presentationPost
       }
     }
   }
