@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { gql, graphql } from 'react-apollo';
 import { connect } from 'react-redux';
+import { NavigationStyles } from '@expo/ex-navigation';
 
 import Router from '../navigation/Router';
 import Input from '../components/Input';
@@ -19,6 +20,9 @@ class SignInScreen extends React.Component {
   static route = {
     navigationBar: {
       title: 'Sign In',
+    },
+    styles: {
+      ...NavigationStyles.SlideVertical,
     },
   };
 

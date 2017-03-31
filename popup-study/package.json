@@ -19,6 +19,7 @@
     "react": "~15.4.0",
     "react-apollo": "^1.0.0-rc.3",
     "react-native": "https://github.com/exponent/react-native/archive/sdk-15.0.0.tar.gz",
+    "react-native-swipe-out": "^2.0.14",
     "react-redux": "^5.0.3",
     "redux": "^3.6.0",
     "uglify-js": "2.8.15"

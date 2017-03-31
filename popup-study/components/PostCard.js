@@ -1,50 +1,37 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  TouchableHighlight,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { withNavigation } from '@expo/ex-navigation';
+import { StyleSheet, Text, View, Button } from 'react-native';
 
-import Router from '../navigation/Router';
 import TagsList from './TagsList';
 
 class PostCard extends React.Component {
+  // PostCard is used under a TouchableHighlight in PostsLists
+  setNativeProps(nativeProps) {
+    this._root.setNativeProps(nativeProps);
+  }
+
   render() {
-    const { post, navigator } = this.props;
+    const { post } = this.props;
     return (
-      <TouchableHighlight
-        onPress={() =>
-          navigator.push(
-            Router.getRoute('post', { id: post.id, title: post.title })
-          )}
-      >
-        <View style={styles.container}>
-          <View style={styles.left}>
-            <Text style={styles.title}>{post.title}</Text>
-            <View style={styles.tagsList}>
-              <TagsList tags={post.tags} />
-            </View>
-          </View>
-          <View style={styles.right}>
-            {post.requests > 0 &&
-              <View style={styles.notif}>
-                <Text style={styles.notifText}>{post.requests}</Text>
-              </View>}
-            <Ionicons name="ios-arrow-forward" size={24} color="#ccc" />
+      <View ref={component => this._root = component} style={styles.container}>
+        <View style={styles.left}>
+          <Text style={styles.title}>{post.title}</Text>
+          <View style={styles.tagsList}>
+            <TagsList tags={post.tags} />
           </View>
         </View>
-      </TouchableHighlight>
+        <View style={styles.right}>
+          {post.requests > 0 &&
+            <View style={styles.notif}>
+              <Text style={styles.notifText}>{post.requests}</Text>
+            </View>}
+        </View>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'row',
     backgroundColor: '#fff',
     paddingTop: 15,
@@ -61,6 +48,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
+    fontWeight: '500',
   },
   tagsList: {
     paddingTop: 4,
@@ -83,4 +71,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withNavigation(PostCard);
+export default PostCard;

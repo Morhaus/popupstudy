@@ -23,9 +23,7 @@ export default class TagsList extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#fff',
   },
   tagIntersperse: {
     paddingRight: 5,

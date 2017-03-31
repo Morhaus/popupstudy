@@ -7,17 +7,15 @@ import {
   Button,
   ActivityIndicator,
 } from 'react-native';
+import { NavigationBar } from '@expo/ex-navigation';
 import { graphql, gql } from 'react-apollo';
 
+import PostCard from '../components/PostCard';
 import TagsList from '../components/TagsList';
 
 class PostScreen extends React.Component {
   static route = {
-    navigationBar: {
-      title(params) {
-        return params.title;
-      },
-    },
+    navigationBar: {},
   };
 
   render() {
@@ -27,16 +25,25 @@ class PostScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <TagsList tags={this.props.data.post.tags} />
+        <PostCard post={this.props.data.post} />
+        <View style={styles.description}>
+          <Text>{this.props.data.post.description}</Text>
+        </View>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  backButton: {
+    flexDirection: 'row',
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#efeff4',
+  },
+  description: {
+    padding: 20,
   },
 });
 
@@ -45,6 +52,7 @@ const PostQuery = gql`
     post: Post(id: $id) {
       id
       title
+      description
       tags {
         id
         name

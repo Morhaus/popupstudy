@@ -1,12 +1,12 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { Notifications } from 'expo';
 import {
   StackNavigation,
-  TabNavigation,
-  TabNavigationItem,
+  DrawerNavigation,
+  DrawerNavigationItem,
 } from '@expo/ex-navigation';
-import { FontAwesome } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 import Alerts from '../constants/Alerts';
 import Colors from '../constants/Colors';
@@ -24,20 +24,41 @@ export default class RootNavigation extends React.Component {
 
   render() {
     return (
-      <TabNavigation tabBarHeight={56} initialTab="posts">
-        <TabNavigationItem
+      <DrawerNavigation initialItem="posts" drawerWidth={200}>
+        <DrawerNavigationItem
           id="posts"
-          renderIcon={isSelected => this._renderIcon('list', isSelected)}
+          renderTitle={isSelected => this._renderTitle('Posts', isSelected)}
+          renderIcon={isSelected =>
+            this._renderIcon('ios-list-outline', isSelected)}
         >
           <StackNavigation initialRoute="posts" />
-        </TabNavigationItem>
-      </TabNavigation>
+        </DrawerNavigationItem>
+        <DrawerNavigationItem
+          id="saved"
+          renderTitle={isSelected => this._renderTitle('Saved', isSelected)}
+          renderIcon={isSelected =>
+            this._renderIcon('ios-star-outline', isSelected)}
+        />
+      </DrawerNavigation>
+    );
+  }
+
+  _renderTitle(text, isSelected) {
+    return (
+      <Text
+        style={[
+          styles.buttonTitleText,
+          isSelected ? styles.selectedText : null,
+        ]}
+      >
+        {text}
+      </Text>
     );
   }
 
   _renderIcon(name, isSelected) {
     return (
-      <FontAwesome
+      <Ionicons
         name={name}
         size={24}
         color={isSelected ? Colors.tabIconSelected : Colors.tabIconDefault}
@@ -70,6 +91,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  buttonTitleText: {
+    color: '#222',
+    fontWeight: 'bold',
+    marginLeft: 18,
+  },
+  icon: {
+    color: '#999',
+  },
+  selectedText: {
+    color: '#0084FF',
+  },
+  selectedItemStyle: {
+    backgroundColor: '#E8E8E8',
   },
   selectedTab: {
     color: Colors.tabIconSelected,
