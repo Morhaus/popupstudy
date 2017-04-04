@@ -20,14 +20,17 @@ export default class MenuNavigation extends React.Component {
           renderIcon={isSelected =>
             this._renderIcon('ios-list-outline', isSelected)}
         >
-          <StackNavigation initialRoute={Router.getRoute('posts')} />
+
+          <StackNavigation id="posts" initialRoute={Router.getRoute('posts')} />
         </DrawerNavigationItem>
         <DrawerNavigationItem
           id="saved"
           renderTitle={isSelected => this._renderTitle('Saved', isSelected)}
           renderIcon={isSelected =>
             this._renderIcon('ios-star-outline', isSelected)}
-        />
+        >
+          <StackNavigation id="posts" initialRoute={Router.getRoute('posts')} />
+        </DrawerNavigationItem>
       </DrawerNavigation>
     );
   }

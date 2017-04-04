@@ -14,7 +14,7 @@ import { NavigationStyles } from '@expo/ex-navigation';
 
 import Router from '../navigation/Router';
 import Input from '../components/Input';
-import { setToken } from '../store/actions';
+import { setUser } from '../store/actions';
 
 class SigninScreen extends React.Component {
   static route = {
@@ -38,12 +38,12 @@ class SigninScreen extends React.Component {
   }
 
   onSignIn = () => {
-    const { setToken, signinUser } = this.props;
+    const { setUser, signinUser } = this.props;
     signinUser({
       variables: { email: this.state.email, password: this.state.password },
     }).then(
       ({ data }) => {
-        setToken(data.signinUser.token);
+        setUser(data.signinUser.user.id, data.signinUser.token);
         // This is a way to replace the preceding route and pop to it.
         this.props.navigator.immediatelyResetStack(
           [Router.getRoute('menuNavigation'), Router.getRoute('signin')],
@@ -130,8 +130,8 @@ const styles = StyleSheet.create({
   },
   form: {
     flex: 0,
-    borderWidth: 1,
-    borderColor: '#e3e3e5',
+    borderWidth: 0.5,
+    borderColor: '#cbcbcd',
     borderRadius: 5,
     overflow: 'hidden',
     marginLeft: '10%',
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     paddingTop: 5,
     paddingBottom: 5,
-    borderTopWidth: 1,
+    borderTopWidth: 0.5,
     borderTopColor: '#e9eaec',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -175,11 +175,14 @@ const signinUserMutation = gql`
   mutation signinUserMutation($email: String!, $password: String!) {
     signinUser(email: { email: $email, password: $password }) {
       token
+      user {
+        id
+      }
     }
   }
 `;
 
-export default connect(null, { setToken })(
+export default connect(null, { setUser })(
   graphql(createUserMutation, { name: 'createUser' })(
     graphql(signinUserMutation, { name: 'signinUser' })(SigninScreen)
   )

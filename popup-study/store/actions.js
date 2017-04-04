@@ -1,7 +1,8 @@
-export const SET_TOKEN = 'SET_TOKEN';
-export function setToken(token) {
+export const SET_USER = 'SET_USER';
+export function setUser(userId, token) {
   return {
-    type: SET_TOKEN,
+    type: SET_USER,
+    userId,
     token,
   };
 }

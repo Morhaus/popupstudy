@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { gql, graphql } from 'react-apollo';
 
+import Colors from '../constants/Colors';
 import Router from '../navigation/Router';
 import PostsList from '../components/PostsList';
 

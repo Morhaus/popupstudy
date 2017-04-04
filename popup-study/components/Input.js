@@ -11,7 +11,7 @@ export default class Input extends React.Component {
   }
 
   render() {
-    const { label, ...otherProps } = this.props;
+    const { label, style, ...otherProps } = this.props;
     return (
       <View
         style={[styles.container, this.state.focus && styles.containerFocus]}
@@ -21,7 +21,11 @@ export default class Input extends React.Component {
           {...otherProps}
           onFocus={() => this.setState({ focus: true })}
           onBlur={() => this.setState({ focus: false })}
-          style={styles.input}
+          style={[styles.input, style]}
+          shadowColor="#cbcbcb"
+          shadowOffset={{ width: 0, height: 0.5 }}
+          shadowOpacity={1}
+          shadowRadius={0}
         />
       </View>
     );
@@ -31,8 +35,6 @@ export default class Input extends React.Component {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'flex-start',
-    borderBottomWidth: 2,
-    borderColor: '#ccc',
   },
   containerFocus: {
     borderColor: '#0074D9',
@@ -42,6 +44,13 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   input: {
+    overflow: 'visible',
     height: 40,
+    backgroundColor: 'white',
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderRadius: 2,
   },
 });
