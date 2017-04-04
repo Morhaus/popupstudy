@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
   Text,
@@ -10,8 +11,10 @@ import {
 import { NavigationBar } from '@expo/ex-navigation';
 import { graphql, gql } from 'react-apollo';
 
+import Router from '../navigation/Router';
 import PostCard from '../components/PostCard';
 import TagsList from '../components/TagsList';
+import MessagesList from '../components/MessagesList';
 
 class PostScreen extends React.Component {
   static route = {
@@ -24,12 +27,19 @@ class PostScreen extends React.Component {
     }
 
     return (
-      <View style={styles.container}>
-        <PostCard post={this.props.data.post} />
-        <View style={styles.description}>
-          <Text>{this.props.data.post.description}</Text>
-        </View>
-      </View>
+      <KeyboardAvoidingView
+        behavior="position"
+        keyboardVerticalOffset={40}
+        style={styles.container}
+      >
+        <ScrollView>
+          <PostCard post={this.props.data.post} />
+          <View style={styles.description}>
+            <Text>{this.props.data.post.description}</Text>
+          </View>
+          <MessagesList postId={this.props.data.post.id} />
+        </ScrollView>
+      </KeyboardAvoidingView>
     );
   }
 }

@@ -7,6 +7,7 @@ import {
   View,
   Button,
   Alert,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { gql, graphql } from 'react-apollo';
 import { connect } from 'react-redux';
@@ -95,7 +96,11 @@ class SigninScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView
+        behavior="height"
+        keyboardVerticalOffset={20}
+        style={styles.container}
+      >
         <View style={styles.form}>
           <View style={styles.inputsContainer}>
             <Input
@@ -117,7 +122,7 @@ class SigninScreen extends React.Component {
             <Button onPress={this.onSignIn} title="Sign In" />
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }

@@ -1,10 +1,26 @@
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
+import {
+  SubscriptionClient,
+  addGraphQLSubscriptions,
+} from 'subscriptions-transport-ws';
+
+const wsClient = new SubscriptionClient(
+  'wss://subscriptions.graph.cool/v1/cj0cew9fx44ka01547ytdzfs3',
+  {
+    reconnect: true,
+  }
+);
 
 const networkInterface = createNetworkInterface({
   uri: 'https://api.graph.cool/simple/v1/cj0cew9fx44ka01547ytdzfs3',
 });
 
-networkInterface.use([
+const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
+  networkInterface,
+  wsClient
+);
+
+networkInterfaceWithSubscriptions.use([
   {
     applyMiddleware(req, next) {
       // Circular dependency.
@@ -24,7 +40,7 @@ networkInterface.use([
 ]);
 
 const client = new ApolloClient({
-  networkInterface,
+  networkInterface: networkInterfaceWithSubscriptions,
 });
 
 export default client;

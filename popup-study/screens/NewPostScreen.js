@@ -29,7 +29,10 @@ class NewPostScreen extends React.Component {
         const { config: { eventEmitter } } = state;
 
         return (
-          <Button title="Submit" onPress={() => eventEmitter.emit('submit')} />
+          <Button
+            title="Publish"
+            onPress={() => eventEmitter.emit('publish')}
+          />
         );
       },
     },
@@ -48,9 +51,9 @@ class NewPostScreen extends React.Component {
     this.subscriptionCancel = this.props.route
       .getEventEmitter()
       .addListener('cancel', this.onCancel);
-    this.subscriptionSubmit = this.props.route
+    this.subscriptionPublish = this.props.route
       .getEventEmitter()
-      .addListener('submit', this.onSubmit);
+      .addListener('publish', this.onPublish);
   }
 
   componentWillUnmount() {
@@ -61,7 +64,7 @@ class NewPostScreen extends React.Component {
     this.props.navigator.pop();
   };
 
-  onSubmit = () => {
+  onPublish = () => {
     this.props
       .createPost({
         variables: {
