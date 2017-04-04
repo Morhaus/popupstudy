@@ -28,7 +28,7 @@ class PostScreen extends React.Component {
 
     return (
       <KeyboardAvoidingView
-        behavior="position"
+        behavior="height"
         keyboardVerticalOffset={40}
         style={styles.container}
       >
