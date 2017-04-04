@@ -7,7 +7,11 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { NavigationProvider, StackNavigation } from '@expo/ex-navigation';
+import {
+  NavigationProvider,
+  StackNavigation,
+  NavigationContext,
+} from '@expo/ex-navigation';
 import { FontAwesome } from '@expo/vector-icons';
 import { ApolloProvider } from 'react-apollo';
 
@@ -17,11 +21,12 @@ import './utilities/reactotron';
 import store from './store/store';
 import client from './utilities/apollo';
 
-class AppContainer extends React.Component {
-  state = {
-    appIsReady: false,
-  };
+const navigationContext = new NavigationContext({
+  router: Router,
+  store: store,
+});
 
+class AppContainer extends React.Component {
   componentWillMount() {
     this._loadAssetsAsync();
   }
@@ -42,31 +47,26 @@ class AppContainer extends React.Component {
       );
       console.log(e.message);
     } finally {
-      this.setState({ appIsReady: true });
+      navigationContext.getNavigator('root').push(Router.getRoute('signin'));
     }
   }
 
   render() {
-    if (this.state.appIsReady) {
-      return (
-        <View style={styles.container}>
-          <ApolloProvider store={store} client={client}>
-            <NavigationProvider router={Router}>
-              <StackNavigation
-                id="signIn"
-                initialRoute={Router.getRoute('signIn')}
-              />
-            </NavigationProvider>
-          </ApolloProvider>
+    return (
+      <View style={styles.container}>
+        <ApolloProvider store={store} client={client}>
+          <NavigationProvider context={navigationContext}>
+            <StackNavigation
+              id="root"
+              initialRoute={Router.getRoute('loading')}
+            />
+          </NavigationProvider>
+        </ApolloProvider>
 
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          {Platform.OS === 'android' &&
-            <View style={styles.statusBarUnderlay} />}
-        </View>
-      );
-    } else {
-      return <Expo.AppLoading />;
-    }
+        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+        {Platform.OS === 'android' && <View style={styles.statusBarUnderlay} />}
+      </View>
+    );
   }
 }
 

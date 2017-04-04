@@ -16,10 +16,11 @@ import Router from '../navigation/Router';
 import Input from '../components/Input';
 import { setToken } from '../store/actions';
 
-class SignInScreen extends React.Component {
+class SigninScreen extends React.Component {
   static route = {
     navigationBar: {
       title: 'Sign In',
+      renderLeft: () => null,
     },
     styles: {
       ...NavigationStyles.SlideVertical,
@@ -37,13 +38,19 @@ class SignInScreen extends React.Component {
   }
 
   onSignIn = () => {
-    const { setToken, signInUser } = this.props;
-    signInUser({
+    const { setToken, signinUser } = this.props;
+    signinUser({
       variables: { email: this.state.email, password: this.state.password },
     }).then(
       ({ data }) => {
         setToken(data.signinUser.token);
-        this.props.navigator.push(Router.getRoute('rootNavigation'));
+        // This is a way to replace the preceding route and pop to it.
+        this.props.navigator.immediatelyResetStack(
+          [Router.getRoute('menuNavigation'), Router.getRoute('signin')],
+          1
+        );
+        // @TODO: Figure out a better way to do this.
+        setTimeout(() => this.props.navigator.pop(), 10);
       },
       error => {
         console.log({ error });
@@ -164,8 +171,8 @@ const createUserMutation = gql`
   }
 `;
 
-const signInUserMutation = gql`
-  mutation signInUserMutation($email: String!, $password: String!) {
+const signinUserMutation = gql`
+  mutation signinUserMutation($email: String!, $password: String!) {
     signinUser(email: { email: $email, password: $password }) {
       token
     }
@@ -174,6 +181,6 @@ const signInUserMutation = gql`
 
 export default connect(null, { setToken })(
   graphql(createUserMutation, { name: 'createUser' })(
-    graphql(signInUserMutation, { name: 'signInUser' })(SignInScreen)
+    graphql(signinUserMutation, { name: 'signinUser' })(SigninScreen)
   )
 );
