@@ -72,12 +72,17 @@ class NewPostScreen extends React.Component {
       })
       .then(
         ({ data }) => {
-          console.log(Router.getRoute('posts'));
-          this.props.navigation.getNavigator('posts').push(
-            Router.getRoute('post', {
-              id: data.createPost.id,
-              title: data.createPost.title,
-            })
+          // This is equivalent to an instant push
+          const navigator = this.props.navigation.getNavigator('posts');
+          const routes = navigator._getNavigatorState().routes;
+          navigator.immediatelyResetStack(
+            routes.concat([
+              Router.getRoute('post', {
+                id: data.createPost.id,
+                title: data.createPost.title,
+              }),
+            ]),
+            routes.length
           );
           setTimeout(() => this.props.navigator.pop(), 10);
         },

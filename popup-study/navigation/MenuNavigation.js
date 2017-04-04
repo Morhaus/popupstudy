@@ -13,7 +13,7 @@ import Colors from '../constants/Colors';
 export default class MenuNavigation extends React.Component {
   render() {
     return (
-      <DrawerNavigation initialItem="posts" drawerWidth={200}>
+      <DrawerNavigation id="menu" initialItem="posts" drawerWidth={200}>
         <DrawerNavigationItem
           id="posts"
           renderTitle={isSelected => this._renderTitle('Posts', isSelected)}
@@ -29,7 +29,7 @@ export default class MenuNavigation extends React.Component {
           renderIcon={isSelected =>
             this._renderIcon('ios-star-outline', isSelected)}
         >
-          <StackNavigation id="posts" initialRoute={Router.getRoute('posts')} />
+          <StackNavigation id="saved" initialRoute={Router.getRoute('posts')} />
         </DrawerNavigationItem>
       </DrawerNavigation>
     );
