@@ -250,9 +250,14 @@ export default connect(mapStateToProps)(
                 ? createThread({
                     variables: { postId, authorId: threadsQuery.user.id },
                     updateQueries: {
-                      ThreadsQuery: (previousQuery, { mutationResult }) => ({
-                        ...previousQuery,
-                        threads: [mutationResult.data.createThread],
+                      ThreadsQuery: (previousResult, { mutationResult }) => ({
+                        ...previousResult,
+                        threads: [
+                          {
+                            ...mutationResult.data.createThread,
+                            messages: [],
+                          },
+                        ],
                       }),
                     },
                   }).then(({ data }) => {
