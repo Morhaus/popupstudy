@@ -6,6 +6,7 @@ import LoadingScreen from '../screens/LoadingScreen';
 import SigninScreen from '../screens/SigninScreen';
 import SuggestedPostsScreen from '../screens/SuggestedPostsScreen';
 import MyPostsScreen from '../screens/MyPostsScreen';
+import PostScreen from '../screens/PostScreen';
 import NewPostScreen from '../screens/NewPostScreen';
 
 export default createRouter(() => ({
@@ -15,5 +16,6 @@ export default createRouter(() => ({
   signin: () => SigninScreen,
   suggestedPosts: () => SuggestedPostsScreen,
   myPosts: () => MyPostsScreen,
+  post: () => PostScreen,
   newPost: () => NewPostScreen,
 }));
