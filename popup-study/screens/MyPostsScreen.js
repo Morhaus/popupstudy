@@ -8,15 +8,16 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { gql, graphql } from 'react-apollo';
+import { connect } from 'react-redux';
 
 import Colors from '../constants/Colors';
 import Router from '../navigation/Router';
 import PostsList from '../components/PostsList';
 
-class PostsScreen extends React.Component {
+class MyPostsScreen extends React.Component {
   static route = {
     navigationBar: {
-      title: 'Posts',
+      title: 'My Posts',
       renderRight(state) {
         const { config: { eventEmitter } } = state;
 
@@ -50,13 +51,8 @@ class PostsScreen extends React.Component {
           categories={[
             {
               id: 'myPosts',
-              title: 'My posts',
-              posts: this.props.data.user.posts,
-            },
-            {
-              id: 'suggestedPosts',
-              title: 'Suggested',
-              posts: this.props.data.allPosts,
+              title: 'My Posts',
+              posts: this.props.data.myPosts,
             },
           ]}
         />
@@ -76,14 +72,9 @@ const PostsQuery = gql`
     }
   }
 
-  query PostsQuery {
-    allPosts {
+  query PostsQuery($userId: ID!) {
+    myPosts: allPosts(filter: { author: { id: $userId } }) {
       ...presentationPost
-    }
-    user {
-      posts {
-        ...presentationPost
-      }
     }
   }
 `;
@@ -95,4 +86,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default graphql(PostsQuery)(PostsScreen);
+export default connect(state => ({ userId: state.app.userId }))(
+  graphql(PostsQuery, {
+    options: ({ userId }) => ({ variables: { userId } }),
+  })(MyPostsScreen)
+);

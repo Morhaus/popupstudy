@@ -13,26 +13,40 @@ import Colors from '../constants/Colors';
 export default class MenuNavigation extends React.Component {
   render() {
     return (
-      <DrawerNavigation id="menu" initialItem="posts" drawerWidth={200}>
+      <DrawerNavigation
+        id="menu"
+        initialItem="posts"
+        drawerWidth={200}
+        renderHeader={this._renderHeader}
+      >
         <DrawerNavigationItem
           id="posts"
           renderTitle={isSelected => this._renderTitle('Posts', isSelected)}
           renderIcon={isSelected =>
-            this._renderIcon('ios-list-outline', isSelected)}
+            this._renderIcon('ios-list-box-outline', isSelected)}
         >
-
-          <StackNavigation id="posts" initialRoute={Router.getRoute('posts')} />
+          <StackNavigation
+            id="suggestedPosts"
+            initialRoute={Router.getRoute('suggestedPosts')}
+          />
         </DrawerNavigationItem>
         <DrawerNavigationItem
-          id="saved"
-          renderTitle={isSelected => this._renderTitle('Saved', isSelected)}
+          id="myPosts"
+          renderTitle={isSelected => this._renderTitle('My Posts', isSelected)}
           renderIcon={isSelected =>
-            this._renderIcon('ios-star-outline', isSelected)}
+            this._renderIcon('ios-archive-outline', isSelected)}
         >
-          <StackNavigation id="saved" initialRoute={Router.getRoute('posts')} />
+          <StackNavigation
+            id="myPosts"
+            initialRoute={Router.getRoute('myPosts')}
+          />
         </DrawerNavigationItem>
       </DrawerNavigation>
     );
+  }
+
+  _renderHeader() {
+    return <View style={{ height: 30 }} />;
   }
 
   _renderTitle(text, isSelected) {
@@ -74,6 +88,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 24,
     height: 24,
+    marginTop: 3,
     alignItems: 'center',
     justifyContent: 'center',
   },

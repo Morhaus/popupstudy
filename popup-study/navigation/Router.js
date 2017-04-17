@@ -4,8 +4,8 @@ import RootNavigation from './RootNavigation';
 import MenuNavigation from './MenuNavigation';
 import LoadingScreen from '../screens/LoadingScreen';
 import SigninScreen from '../screens/SigninScreen';
-import PostsScreen from '../screens/PostsScreen';
-import PostScreen from '../screens/PostScreen';
+import SuggestedPostsScreen from '../screens/SuggestedPostsScreen';
+import MyPostsScreen from '../screens/MyPostsScreen';
 import NewPostScreen from '../screens/NewPostScreen';
 
 export default createRouter(() => ({
@@ -13,7 +13,7 @@ export default createRouter(() => ({
   menuNavigation: () => MenuNavigation,
   loading: () => LoadingScreen,
   signin: () => SigninScreen,
-  posts: () => PostsScreen,
-  post: () => PostScreen,
+  suggestedPosts: () => SuggestedPostsScreen,
+  myPosts: () => MyPostsScreen,
   newPost: () => NewPostScreen,
 }));
