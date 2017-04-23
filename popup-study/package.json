@@ -4,22 +4,16 @@
   "description": "Hello Expo!",
   "author": null,
   "main": "main.js",
-  "scripts": {
-    "test": "node node_modules/jest/bin/jest.js"
-  },
-  "jest": {
-    "preset": "jest-expo"
-  },
   "dependencies": {
-    "@expo/ex-navigation": "~2.9.2",
+    "@expo/ex-navigation": "~2.10.0",
     "@expo/samples": "~1.0.3",
     "@expo/vector-icons": "~4.0.0",
     "apollo-client": "^1.0.3",
-    "expo": "^15.0.2",
+    "expo": "^16.0.0",
     "immutability-helper": "^2.1.2",
-    "react": "~15.4.0",
-    "react-apollo": "^1.0.2",
-    "react-native": "https://github.com/exponent/react-native/archive/sdk-15.0.0.tar.gz",
+    "react": "16.0.0-alpha.6",
+    "react-apollo": "^1.1.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-16.0.0.tar.gz",
     "react-native-gifted-chat": "^0.1.4",
     "react-native-swipe-out": "^2.0.14",
     "react-redux": "^5.0.3",
@@ -29,7 +23,6 @@
     "uglify-js": "2.8.15"
   },
   "devDependencies": {
-    "jest-expo": "~0.2.1",
     "reactotron-react-native": "^1.9.1",
     "reactotron-redux": "^1.9.1",
     "redux-devtools": "^3.3.2"
