@@ -6,3 +6,10 @@ export function setUser(userId, token) {
     token,
   };
 }
+
+export const CLEAR_USER = 'CLEAR_USER';
+export function clearUser() {
+  return {
+    type: CLEAR_USER,
+  };
+}

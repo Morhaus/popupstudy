@@ -1,4 +1,4 @@
-import { SET_USER } from './actions';
+import { SET_USER, CLEAR_USER } from './actions';
 
 const initialState = {
   userId: null,
@@ -12,6 +12,12 @@ export default function reducer(state = initialState, action) {
         ...state,
         userId: action.userId,
         token: action.token,
+      };
+    case CLEAR_USER:
+      return {
+        ...state,
+        userId: null,
+        token: null,
       };
     default:
       return state;

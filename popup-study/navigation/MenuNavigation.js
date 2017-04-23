@@ -4,14 +4,18 @@ import {
   DrawerNavigation,
   DrawerNavigationItem,
   StackNavigation,
+  withNavigation,
 } from '@expo/ex-navigation';
 import { Ionicons } from '@expo/vector-icons';
+import { connect } from 'react-redux';
 
+import { clearUser } from '../store/actions';
 import Router from './Router';
 import Colors from '../constants/Colors';
 
-export default class MenuNavigation extends React.Component {
+class MenuNavigation extends React.Component {
   render() {
+    const { dispatch, navigation } = this.props;
     return (
       <DrawerNavigation
         id="menu"
@@ -41,6 +45,23 @@ export default class MenuNavigation extends React.Component {
             initialRoute={Router.getRoute('myPosts')}
           />
         </DrawerNavigationItem>
+        <DrawerNavigationItem
+          id="logOut"
+          renderTitle={isSelected => this._renderTitle('Log out', isSelected)}
+          renderIcon={isSelected => this._renderIcon('ios-log-out', isSelected)}
+          onPress={() => {
+            navigation
+              .getNavigator('root')
+              .immediatelyResetStack([Router.getRoute('loading')], 0);
+            setTimeout(
+              () => {
+                navigation.getNavigator('root').push(Router.getRoute('signin'));
+                dispatch(clearUser());
+              },
+              10
+            );
+          }}
+        />
       </DrawerNavigation>
     );
   }
@@ -102,3 +123,5 @@ const styles = StyleSheet.create({
     color: Colors.tabIconSelected,
   },
 });
+
+export default withNavigation(connect()(MenuNavigation));
