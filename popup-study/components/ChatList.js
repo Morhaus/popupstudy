@@ -40,11 +40,7 @@ class ChatList extends React.Component {
               <View style={styles.thread} key={thread.id}>
                 <View style={styles.threadMetaContainer}>
                   <Text style={styles.threadName}>
-                    {
-                      thread.messages.find(
-                        m => m.author.id !== user.id
-                      ).author.email
-                    }
+                    {thread.author.email}
                   </Text>
                   <Text style={styles.threadLastMessageTime}>
                     {moment(thread.messages[0].sentAt).fromNow()}
@@ -109,6 +105,7 @@ const ThreadsQuery = gql`
       id
       author {
         id
+        email
       }
       messages(orderBy: sentAt_DESC, first: 1) {
         id
