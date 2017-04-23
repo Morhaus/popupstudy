@@ -17,6 +17,7 @@ import Router from '../navigation/Router';
 import PostCard from '../components/PostCard';
 import TagsList from '../components/TagsList';
 import Chat from '../components/Chat';
+import ChatList from '../components/ChatList';
 
 class PostScreen extends React.Component {
   static route = {
@@ -37,9 +38,11 @@ class PostScreen extends React.Component {
           <Text>{this.props.data.post.description}</Text>
         </View>
         {this.props.data.post.author.id === userId
-          ? <View style={styles.chatList} />
+          ? <View style={styles.chatList}>
+              <ChatList postId={this.props.data.post.id} />
+            </View>
           : <View style={styles.chat}>
-              <Chat postId={this.props.data.post.id} />
+              <Chat userId={userId} postId={this.props.data.post.id} />
             </View>}
       </View>
     );
@@ -55,7 +58,6 @@ const styles = StyleSheet.create({
   },
   chatList: {
     flex: 1,
-    backgroundColor: 'red',
   },
   chat: {
     flex: 1,

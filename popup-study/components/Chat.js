@@ -165,159 +165,151 @@ const MessagesSubscription = gql`
   }
 `;
 
-const mapStateToProps = state => ({
-  userId: state.app.userId,
-});
+export default graphql(createMessageMutation, { name: 'createMessage' })(
+  graphql(createThreadMutation, { name: 'createThread' })(
+    graphql(ThreadsQuery, {
+      name: 'threadsQuery',
 
-export default connect(mapStateToProps)(
-  graphql(createMessageMutation, { name: 'createMessage' })(
-    graphql(createThreadMutation, { name: 'createThread' })(
-      graphql(ThreadsQuery, {
-        name: 'threadsQuery',
+      options: ({ postId, userId }) => ({
+        variables: {
+          postId,
+          userId,
+        },
+      }),
 
-        options: ({ postId, userId }) => ({
-          variables: {
+      props: (
+        {
+          threadsQuery,
+          ownProps: {
             postId,
-            userId,
+            createMessage,
+            createThread,
           },
-        }),
-
-        props: (
-          {
-            threadsQuery,
-            ownProps: {
-              postId,
-              createMessage,
-              createThread,
-            },
-          }
-        ) => {
-          if (threadsQuery.loading) {
-            return {
-              loading: true,
-            };
-          }
-
-          if (threadsQuery.error) {
-            throw threadsQuery.error;
-          }
-
-          let thread = threadsQuery.threads.length > 0
-            ? threadsQuery.threads[0]
-            : {
-                id: null,
-                messages: [],
-              };
-
-          const subscribe = threadId => {
-            return threadsQuery.subscribeToMore({
-              document: MessagesSubscription,
-              variables: {
-                threadId,
-              },
-              updateQuery: (previousResult, { subscriptionData }) => {
-                const newMessage = subscriptionData.data.Message.node;
-                if (
-                  previousResult.threads[0].messages.some(
-                    m => m.id === newMessage.id
-                  )
-                ) {
-                  return previousResult;
-                }
-                return update(previousResult, {
-                  threads: {
-                    0: {
-                      messages: {
-                        $unshift: [newMessage],
-                      },
-                    },
-                  },
-                });
-              },
-            });
-          };
-          let unsubscribe = thread.id !== null
-            ? subscribe(thread.id)
-            : () => {};
-
+        }
+      ) => {
+        if (threadsQuery.loading) {
           return {
-            loading: false,
-            user: threadsQuery.user,
-            messages: thread.messages,
-            unsubscribe: () => unsubscribe(),
-            createMessage: ({ content, sentAt }) => {
-              const threadPromise = thread.id === null
-                ? createThread({
-                    variables: { postId, authorId: threadsQuery.user.id },
-                    updateQueries: {
-                      ThreadsQuery: (previousResult, { mutationResult }) => ({
-                        ...previousResult,
-                        threads: [
-                          {
-                            ...mutationResult.data.createThread,
-                            messages: [],
-                          },
-                        ],
-                      }),
-                    },
-                  }).then(({ data }) => {
-                    if (thread.id === null) {
-                      thread = data.createThread;
-                      unsubscribe = subscribe(thread.id);
-                    }
-                    return data.createThread;
-                  })
-                : Promise.resolve(thread);
+            loading: true,
+          };
+        }
 
-              return threadPromise.then(thread => {
-                const tempId = uuid();
-                return createMessage({
-                  variables: {
-                    threadId: thread.id,
-                    authorId: threadsQuery.user.id,
-                    content,
-                    sentAt,
-                  },
-                  optimisticResponse: {
-                    createMessage: {
-                      __typename: 'Message',
-                      id: tempId,
+        if (threadsQuery.error) {
+          throw threadsQuery.error;
+        }
+
+        let thread = threadsQuery.threads.length > 0
+          ? threadsQuery.threads[0]
+          : {
+              id: null,
+              messages: [],
+            };
+
+        const subscribe = threadId => {
+          return threadsQuery.subscribeToMore({
+            document: MessagesSubscription,
+            variables: {
+              threadId,
+            },
+            updateQuery: (previousResult, { subscriptionData }) => {
+              const newMessage = subscriptionData.data.Message.node;
+              if (
+                previousResult.threads[0].messages.some(
+                  m => m.id === newMessage.id
+                )
+              ) {
+                return previousResult;
+              }
+              return update(previousResult, {
+                threads: {
+                  0: {
+                    messages: {
+                      $unshift: [newMessage],
                     },
                   },
-                  updateQueries: {
-                    ThreadsQuery: (previousResult, { mutationResult }) => {
-                      const newMessage = mutationResult.data.createMessage;
-                      if (
-                        previousResult.threads[0].messages.some(
-                          m => m.id === newMessage.id
-                        )
-                      ) {
-                        return previousResult;
-                      }
-                      return update(previousResult, {
-                        threads: {
-                          0: {
-                            messages: {
-                              $unshift: [
-                                {
-                                  ...newMessage,
-                                  content,
-                                  sentAt,
-                                  author: threadsQuery.user,
-                                },
-                              ],
-                            },
-                          },
-                        },
-                      });
-                    },
-                  },
-                });
+                },
               });
             },
-          };
-        },
-      })(Chat)
-    )
+          });
+        };
+        let unsubscribe = thread.id !== null ? subscribe(thread.id) : () => {};
+
+        return {
+          loading: false,
+          user: threadsQuery.user,
+          messages: thread.messages,
+          unsubscribe: () => unsubscribe(),
+          createMessage: ({ content, sentAt }) => {
+            const threadPromise = thread.id === null
+              ? createThread({
+                  variables: { postId, authorId: threadsQuery.user.id },
+                  updateQueries: {
+                    ThreadsQuery: (previousResult, { mutationResult }) => ({
+                      ...previousResult,
+                      threads: [
+                        {
+                          ...mutationResult.data.createThread,
+                          messages: [],
+                        },
+                      ],
+                    }),
+                  },
+                }).then(({ data }) => {
+                  if (thread.id === null) {
+                    thread = data.createThread;
+                    unsubscribe = subscribe(thread.id);
+                  }
+                  return data.createThread;
+                })
+              : Promise.resolve(thread);
+
+            return threadPromise.then(thread => {
+              const tempId = uuid();
+              return createMessage({
+                variables: {
+                  threadId: thread.id,
+                  authorId: threadsQuery.user.id,
+                  content,
+                  sentAt,
+                },
+                optimisticResponse: {
+                  createMessage: {
+                    __typename: 'Message',
+                    id: tempId,
+                  },
+                },
+                updateQueries: {
+                  ThreadsQuery: (previousResult, { mutationResult }) => {
+                    const newMessage = mutationResult.data.createMessage;
+                    if (
+                      previousResult.threads[0].messages.some(
+                        m => m.id === newMessage.id
+                      )
+                    ) {
+                      return previousResult;
+                    }
+                    return update(previousResult, {
+                      threads: {
+                        0: {
+                          messages: {
+                            $unshift: [
+                              {
+                                ...newMessage,
+                                content,
+                                sentAt,
+                                author: threadsQuery.user,
+                              },
+                            ],
+                          },
+                        },
+                      },
+                    });
+                  },
+                },
+              });
+            });
+          },
+        };
+      },
+    })(Chat)
   )
 );

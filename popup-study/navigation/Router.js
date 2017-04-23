@@ -7,6 +7,7 @@ import SigninScreen from '../screens/SigninScreen';
 import SuggestedPostsScreen from '../screens/SuggestedPostsScreen';
 import MyPostsScreen from '../screens/MyPostsScreen';
 import PostScreen from '../screens/PostScreen';
+import ChatScreen from '../screens/ChatScreen';
 import NewPostScreen from '../screens/NewPostScreen';
 
 export default createRouter(() => ({
@@ -17,5 +18,6 @@ export default createRouter(() => ({
   suggestedPosts: () => SuggestedPostsScreen,
   myPosts: () => MyPostsScreen,
   post: () => PostScreen,
+  chat: () => ChatScreen,
   newPost: () => NewPostScreen,
 }));
