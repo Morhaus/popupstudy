@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   postCardIntersperse: {
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.5,
     borderBottomColor: '#ddd',
   },
 });

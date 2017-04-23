@@ -25,9 +25,10 @@ class ChatList extends React.Component {
 
     return (
       <ScrollView style={styles.container}>
-        {threads.map(thread => {
+        {threads.map((thread, idx) => {
           return (
             <TouchableHighlight
+              key={thread.id}
               onPress={() => {
                 navigator.push(
                   Router.getRoute('chat', {
@@ -37,7 +38,12 @@ class ChatList extends React.Component {
                 );
               }}
             >
-              <View style={styles.thread} key={thread.id}>
+              <View
+                style={[
+                  styles.thread,
+                  idx !== threads.length - 1 && styles.threadIntersperse,
+                ]}
+              >
                 <View style={styles.threadMetaContainer}>
                   <Text style={styles.threadName}>
                     {thread.author.email}
@@ -92,6 +98,10 @@ const styles = StyleSheet.create({
   },
   threadLastMessageAuthor: {
     marginRight: 5,
+  },
+  threadIntersperse: {
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#ddd',
   },
 });
 
