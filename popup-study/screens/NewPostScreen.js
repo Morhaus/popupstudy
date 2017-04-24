@@ -7,12 +7,13 @@ import {
   View,
   Button,
 } from 'react-native';
-import { gql, graphql } from 'react-apollo';
+import { gql, graphql, withApollo } from 'react-apollo';
 import { connect } from 'react-redux';
 import { NavigationStyles } from '@expo/ex-navigation';
 
 import Router from '../navigation/Router';
 import Input from '../components/Input';
+import TagsInput from '../components/TagsInput';
 
 class NewPostScreen extends React.Component {
   static route = {
@@ -65,18 +66,55 @@ class NewPostScreen extends React.Component {
   };
 
   onPublish = () => {
-    this.props
-      .createPost({
+    const { tags } = this.state;
+    let existingTags;
+    let tagsToCreate;
+    let foundTags;
+    this.props.client
+      .query({
+        query: findTagsQuery,
         variables: {
-          title: this.state.title,
-          description: this.state.description,
-          authorId: this.props.userId,
+          tags,
         },
+      })
+      .then(({ data }) => {
+        foundTags = data.tags;
+        existingTags = foundTags.map(tag => tag.name);
+        tagsToCreate = tags.filter(tag => !existingTags.includes(tag));
+
+        if (tagsToCreate.length === 0) {
+          return Promise.resolve([]);
+        }
+
+        const promises = tagsToCreate.map(tag =>
+          this.props.createTag({ variables: { name: tag } }));
+
+        return Promise.all(promises);
+      })
+      .then(results => {
+        const resultTags = tags.map(tag => {
+          const idx = existingTags.indexOf(tag);
+          if (idx !== -1) {
+            return foundTags[idx];
+          }
+          return results[tagsToCreate.indexOf(tag)].data.createTag;
+        });
+
+        return this.props.createPost({
+          variables: {
+            title: this.state.title,
+            description: this.state.description,
+            authorId: this.props.userId,
+            tagsIds: resultTags.map(tag => tag.id),
+          },
+        });
       })
       .then(
         ({ data }) => {
           // This is equivalent to an instant push
-          const navigator = this.props.navigation.getNavigator('posts');
+          const navigator = this.props.navigation.getNavigator(
+            'suggestedPosts'
+          );
           const routes = navigator._getNavigatorState().routes;
           navigator.immediatelyResetStack(
             routes.concat([
@@ -89,8 +127,11 @@ class NewPostScreen extends React.Component {
           );
           setTimeout(() => this.props.navigator.pop(), 10);
         },
-        err => {}
-      );
+        err => {
+          console.log(err);
+        }
+      )
+      .catch(e => console.log(e));
   };
 
   render() {
@@ -101,6 +142,13 @@ class NewPostScreen extends React.Component {
             label="Title"
             onChangeText={title => this.setState({ title })}
             value={this.state.title}
+          />
+          <View style={styles.spacer} />
+          <TagsInput
+            label="Tags"
+            multiline
+            onChange={tags => this.setState({ tags })}
+            value={this.state.tags}
           />
           <View style={styles.spacer} />
           <Input
@@ -136,11 +184,31 @@ const styles = StyleSheet.create({
   },
 });
 
+const findTagsQuery = gql`
+  query findTags($tags: [String!]) {
+    tags: allTags(filter: {
+      name_in: $tags
+    }) {
+      id
+      name
+    }
+  }
+`;
+
 const createPostMutation = gql`
-  mutation createPostMutation($title: String!, $description: String!, $authorId: ID!) {
-    createPost(title: $title, description: $description, authorId: $authorId) {
+  mutation createPostMutation($title: String!, $description: String!, $authorId: ID!, $tagsIds: [ID!]) {
+    createPost(title: $title, description: $description, authorId: $authorId, tagsIds: $tagsIds) {
       id
       title
+    }
+  }
+`;
+
+const createTagMutation = gql`
+  mutation createTagMutation($name: String!) {
+    createTag(name: $name) {
+      id
+      name
     }
   }
 `;
@@ -150,5 +218,7 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(
-  graphql(createPostMutation, { name: 'createPost' })(NewPostScreen)
+  graphql(createPostMutation, { name: 'createPost' })(
+    graphql(createTagMutation, { name: 'createTag' })(withApollo(NewPostScreen))
+  )
 );

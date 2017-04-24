@@ -19,12 +19,12 @@ class MenuNavigation extends React.Component {
     return (
       <DrawerNavigation
         id="menu"
-        initialItem="posts"
+        initialItem="suggestedPosts"
         drawerWidth={200}
         renderHeader={this._renderHeader}
       >
         <DrawerNavigationItem
-          id="posts"
+          id="suggestedPosts"
           renderTitle={isSelected => this._renderTitle('Posts', isSelected)}
           renderIcon={isSelected =>
             this._renderIcon('ios-list-box-outline', isSelected)}
