@@ -9,9 +9,19 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { connect } from 'react-redux';
 
+import { tintColor } from '../constants/Colors';
 import { clearUser } from '../store/actions';
 import Router from './Router';
 import Colors from '../constants/Colors';
+
+const routeConfig = {
+  navigationBar: {
+    tintColor: Colors.tintColor,
+    titleStyle: {
+      color: 'black',
+    },
+  },
+};
 
 class MenuNavigation extends React.Component {
   render() {
@@ -32,6 +42,7 @@ class MenuNavigation extends React.Component {
           <StackNavigation
             id="suggestedPosts"
             initialRoute={Router.getRoute('suggestedPosts')}
+            defaultRouteConfig={routeConfig}
           />
         </DrawerNavigationItem>
         <DrawerNavigationItem
@@ -43,6 +54,7 @@ class MenuNavigation extends React.Component {
           <StackNavigation
             id="myPosts"
             initialRoute={Router.getRoute('myPosts')}
+            defaultRouteConfig={routeConfig}
           />
         </DrawerNavigationItem>
         <DrawerNavigationItem
@@ -50,10 +62,12 @@ class MenuNavigation extends React.Component {
           renderTitle={isSelected => this._renderTitle('Profile', isSelected)}
           renderIcon={isSelected =>
             this._renderIcon('ios-person-outline', isSelected)}
+          defaultRouteConfig={routeConfig}
         >
           <StackNavigation
             id="profile"
             initialRoute={Router.getRoute('profile')}
+            defaultRouteConfig={routeConfig}
           />
         </DrawerNavigationItem>
         <DrawerNavigationItem
@@ -64,13 +78,10 @@ class MenuNavigation extends React.Component {
             navigation
               .getNavigator('root')
               .immediatelyResetStack([Router.getRoute('loading')], 0);
-            setTimeout(
-              () => {
-                navigation.getNavigator('root').push(Router.getRoute('signin'));
-                dispatch(clearUser());
-              },
-              10
-            );
+            setTimeout(() => {
+              navigation.getNavigator('root').push(Router.getRoute('signin'));
+              dispatch(clearUser());
+            }, 10);
           }}
         />
       </DrawerNavigation>
