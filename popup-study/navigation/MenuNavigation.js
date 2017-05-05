@@ -46,6 +46,17 @@ class MenuNavigation extends React.Component {
           />
         </DrawerNavigationItem>
         <DrawerNavigationItem
+          id="profile"
+          renderTitle={isSelected => this._renderTitle('Profile', isSelected)}
+          renderIcon={isSelected =>
+            this._renderIcon('ios-person-outline', isSelected)}
+        >
+          <StackNavigation
+            id="profile"
+            initialRoute={Router.getRoute('profile')}
+          />
+        </DrawerNavigationItem>
+        <DrawerNavigationItem
           id="logOut"
           renderTitle={isSelected => this._renderTitle('Log out', isSelected)}
           renderIcon={isSelected => this._renderIcon('ios-log-out', isSelected)}

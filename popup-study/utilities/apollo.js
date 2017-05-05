@@ -41,6 +41,7 @@ networkInterfaceWithSubscriptions.use([
 
 const client = new ApolloClient({
   networkInterface: networkInterfaceWithSubscriptions,
+  dataIdFromObject: o => o.id,
 });
 
 export default client;

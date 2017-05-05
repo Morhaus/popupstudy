@@ -26,7 +26,8 @@ function transformMessage(message) {
     createdAt: message.sentAt,
     user: {
       _id: message.author.id,
-      name: message.author.email,
+      name: message.author.firstName || message.author.email,
+      avatar: message.author.picture && message.author.picture.url,
     },
   };
 }
@@ -129,7 +130,11 @@ const ThreadsQuery = gql`
         id
         author {
           id
-          email
+          firstName
+          picture {
+            id
+            url
+          }
         }
         content
         sentAt
@@ -138,7 +143,11 @@ const ThreadsQuery = gql`
 
     user {
       id
-      email
+      firstName
+      picture {
+        id
+        url
+      }
     }
   }
 `;
@@ -156,7 +165,11 @@ const MessagesSubscription = gql`
         id
         author {
           id
-          email
+          firstName
+          picture {
+            id
+            url
+          }
         }
         content
         sentAt
@@ -177,16 +190,10 @@ export default graphql(createMessageMutation, { name: 'createMessage' })(
         },
       }),
 
-      props: (
-        {
-          threadsQuery,
-          ownProps: {
-            postId,
-            createMessage,
-            createThread,
-          },
-        }
-      ) => {
+      props: ({
+        threadsQuery,
+        ownProps: { postId, createMessage, createThread },
+      }) => {
         if (threadsQuery.loading) {
           return {
             loading: true,

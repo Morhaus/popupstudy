@@ -45,13 +45,21 @@ class SigninScreen extends React.Component {
     }).then(
       ({ data }) => {
         setUser(data.signinUser.user.id, data.signinUser.token);
+
         // This is a way to replace the preceding route and pop to it.
         this.props.navigator.immediatelyResetStack(
           [Router.getRoute('menuNavigation'), Router.getRoute('signin')],
           1
         );
-        // @TODO: Figure out a better way to do this.
-        setTimeout(() => this.props.navigator.pop(), 10);
+
+        if (data.signinUser.user.isSetup) {
+          // @TODO: Figure out a better way to do this.
+          setTimeout(() => this.props.navigator.pop(), 10);
+        } else {
+          this.props.navigator.replace(
+            Router.getRoute('editProfile', { cancel: false })
+          );
+        }
       },
       error => {
         console.log({ error });
@@ -182,6 +190,7 @@ const signinUserMutation = gql`
       token
       user {
         id
+        isSetup
       }
     }
   }

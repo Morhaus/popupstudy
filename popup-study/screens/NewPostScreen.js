@@ -11,6 +11,7 @@ import { gql, graphql, withApollo } from 'react-apollo';
 import { connect } from 'react-redux';
 import { NavigationStyles } from '@expo/ex-navigation';
 
+import findOrCreateTags from '../utilities/findOrCreateTags';
 import Router from '../navigation/Router';
 import Input from '../components/Input';
 import TagsInput from '../components/TagsInput';
@@ -67,39 +68,8 @@ class NewPostScreen extends React.Component {
 
   onPublish = () => {
     const { tags } = this.state;
-    let existingTags;
-    let tagsToCreate;
-    let foundTags;
-    this.props.client
-      .query({
-        query: findTagsQuery,
-        variables: {
-          tags,
-        },
-      })
-      .then(({ data }) => {
-        foundTags = data.tags;
-        existingTags = foundTags.map(tag => tag.name);
-        tagsToCreate = tags.filter(tag => !existingTags.includes(tag));
-
-        if (tagsToCreate.length === 0) {
-          return Promise.resolve([]);
-        }
-
-        const promises = tagsToCreate.map(tag =>
-          this.props.createTag({ variables: { name: tag } }));
-
-        return Promise.all(promises);
-      })
-      .then(results => {
-        const resultTags = tags.map(tag => {
-          const idx = existingTags.indexOf(tag);
-          if (idx !== -1) {
-            return foundTags[idx];
-          }
-          return results[tagsToCreate.indexOf(tag)].data.createTag;
-        });
-
+    findOrCreateTags(this.props.client, tags)
+      .then(resultTags => {
         return this.props.createPost({
           variables: {
             title: this.state.title,
@@ -184,17 +154,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const findTagsQuery = gql`
-  query findTags($tags: [String!]) {
-    tags: allTags(filter: {
-      name_in: $tags
-    }) {
-      id
-      name
-    }
-  }
-`;
-
 const createPostMutation = gql`
   mutation createPostMutation($title: String!, $description: String!, $authorId: ID!, $tagsIds: [ID!]) {
     createPost(title: $title, description: $description, authorId: $authorId, tagsIds: $tagsIds) {
@@ -204,21 +163,10 @@ const createPostMutation = gql`
   }
 `;
 
-const createTagMutation = gql`
-  mutation createTagMutation($name: String!) {
-    createTag(name: $name) {
-      id
-      name
-    }
-  }
-`;
-
 const mapStateToProps = state => ({
   userId: state.app.userId,
 });
 
 export default connect(mapStateToProps)(
-  graphql(createPostMutation, { name: 'createPost' })(
-    graphql(createTagMutation, { name: 'createTag' })(withApollo(NewPostScreen))
-  )
+  graphql(createPostMutation, { name: 'createPost' })(withApollo(NewPostScreen))
 );

@@ -9,6 +9,8 @@ import MyPostsScreen from '../screens/MyPostsScreen';
 import PostScreen from '../screens/PostScreen';
 import ChatScreen from '../screens/ChatScreen';
 import NewPostScreen from '../screens/NewPostScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import EditProfileScreen from '../screens/EditProfileScreen';
 
 export default createRouter(() => ({
   rootNavigation: () => RootNavigation,
@@ -20,4 +22,6 @@ export default createRouter(() => ({
   post: () => PostScreen,
   chat: () => ChatScreen,
   newPost: () => NewPostScreen,
+  profile: () => ProfileScreen,
+  editProfile: () => EditProfileScreen,
 }));
