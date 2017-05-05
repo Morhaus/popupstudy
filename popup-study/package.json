@@ -16,7 +16,6 @@
     "react-apollo": "^1.1.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-16.0.0.tar.gz",
     "react-native-gifted-chat": "^0.1.4",
-    "react-native-swipe-out": "^2.0.14",
     "react-redux": "^5.0.3",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",

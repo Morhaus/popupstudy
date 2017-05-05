@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import { flatten } from 'lodash';
 import { withNavigation } from '@expo/ex-navigation';
-import Swipeout from 'react-native-swipe-out';
 
 import Router from '../navigation/Router';
 import SwipeoutButton from './SwipeoutButton';
@@ -40,45 +39,19 @@ class PostsList extends React.Component {
                       styles.postCardIntersperse,
                   ]}
                 >
-                  <Swipeout
-                    left={[
-                      {
-                        component: (
-                          <SwipeoutButton
-                            title="Save"
-                            icon="ios-star-outline"
-                          />
-                        ),
-                        backgroundColor: '#0074D9',
-                        underlayColor: '#0f8fff',
-                      },
-                    ]}
-                    right={[
-                      {
-                        component: (
-                          <SwipeoutButton
-                            title="Save"
-                            icon="ios-star-outline"
-                          />
-                        ),
-                        backgroundColor: '#0074D9',
-                        underlayColor: '#0f8fff',
-                      },
-                    ]}
+
+                  <TouchableHighlight
+                    delayPressIn={300}
+                    onPress={() =>
+                      navigator.push(
+                        Router.getRoute('post', {
+                          id: post.id,
+                          title: post.title,
+                        })
+                      )}
                   >
-                    <TouchableHighlight
-                      delayPressIn={300}
-                      onPress={() =>
-                        navigator.push(
-                          Router.getRoute('post', {
-                            id: post.id,
-                            title: post.title,
-                          })
-                        )}
-                    >
-                      <PostCard post={post} />
-                    </TouchableHighlight>
-                  </Swipeout>
+                    <PostCard post={post} />
+                  </TouchableHighlight>
                 </View>
               ))}
             </View>,
