@@ -163,7 +163,7 @@ My last experiment with React Native already had little to no navigation. Howeve
 
 This project was my first time using GraphQL/Graphcool, but certainly not my lastHaving tried implementing my own APIs in the past, as well as going through services like Parse, nothing comes close to the simplicity of GraphQL queries.
 
-However, you can't model *everything* with GraphQL queries, and that's why Graphcool provides a way to create serverless functions to execute more complex operations. More on that later.
+However, you can't model *everything* with GraphQL queries, and that's why Graphcool provides a way to create serverless functions to execute more complex operations. A feature I didn't have time to try in the current version of the app.
 
 ### 3. Documentation is important
 
