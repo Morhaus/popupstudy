@@ -22,6 +22,8 @@ However, not everything about React Native is perfect. Having used it to some ex
 
 Starting with Expo was really quick, and the default boilerplate is already a good basis on which to build an app. Overall, I would say that Expo saved me some time, even though I eventually ran into stability issues with the Expo packager. The idea is great but the execution is slightly lacking.
 
+Expo also provides a mobile app from where you can launch and share your prototypes. This feature is useful for testing the app on a variety of devices, as well as sharing it with testers without any special setup.
+
 ### ex-navigation
 
 Navigation is a complex problem, maybe moreso on mobile than on the web. There are a lot of navigation libraries for React Native, but as of right now, one is emerging as the community standard: [react-navigation](https://github.com/react-community/react-navigation). However, I chose to go with [ex-navigation](https://github.com/expo/ex-navigation) as it came bundled with React Native and I didn't want to deal with a beta release.
